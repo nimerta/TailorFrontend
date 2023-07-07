@@ -134,7 +134,7 @@ const AddDesignScreen = ({ navigation, route }) => {
         placeholder="Description"
         value={description}
         onChangeText={(text) => setDescription(text)}
-        multiline={true}
+        multiline={false}
         textAlignVertical="top"
       />
       {/* {image && title && price && designFor && description && !submitted && (

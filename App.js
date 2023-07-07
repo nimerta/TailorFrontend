@@ -10,6 +10,9 @@ import PersonalInfo from "./components/PersonalInfo";
 import AccountInfo from "./components/AccountInfo";
 
 import Loading from "./components/Loaders/Loading";
+import StandardOrder from "./components/StandardOrder";
+import SummaryScreen from "./components/SummaryScreen";
+import OrderStatusScreen from "./components/OrderStatusScreen";
 //import BottomNavigator from "./components/BottomNavigator";
 const Stack = createNativeStackNavigator();
 
@@ -56,11 +59,22 @@ export default function App() {
           component={BottomNavigator}
           options={{ headerShown: false }}
         />
-        {/* <Stack.Screen
-          name="HomeScreen"
-          component={HomeScreen}
-          options={{ headerShown: false }}
-        /> */}
+        <Stack.Screen
+          name="StandardOrder"
+          component={StandardOrder}
+          //options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="SummaryScreen"
+          component={SummaryScreen}
+          //options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="OrderStatusScreen"
+          component={OrderStatusScreen}
+          //options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

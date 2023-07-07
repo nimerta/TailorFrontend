@@ -6,15 +6,20 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import BottomNavigator from "./BottomNavigator.js";
 import Octicons from "react-native-vector-icons/Octicons";
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
-
+  const [ordersQuantity, setOrdersQuantity] = useState("20");
+  const [fullName, setFullname] = useState("Mehak jagwani");
+  const [ordersTitle, setOrdersTitle] = useState("Standard orders");
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
     }, 3000);
   }, []);
 
+  const OnStandardOrders = () => {
+    navigation.navigate("StandardOrder");
+  };
   return (
     <View style={styles.Container}>
       {isLoading ? (
@@ -29,7 +34,7 @@ const HomeScreen = () => {
               ></Image>
             </View>
             <View style={styles.TxtContainer}>
-              <Text style={styles.Txt1Style}>Hi, Nimerta Kumari! </Text>
+              <Text style={styles.Txt1Style}>{fullName}</Text>
               <Text style={styles.Txt2Style}>Good Morning!</Text>
             </View>
             <TouchableOpacity style={styles.notifcationStyle}>
@@ -46,8 +51,8 @@ const HomeScreen = () => {
                 <MaterialIcons name="shopping-cart" size={40} color="white" />
               </View>
               <View style={styles.OrderTextBox}>
-                <Text style={styles.TotalOrders}>50</Text>
-                <Text style={styles.OrdersHeading}>Custom Orders</Text>
+                <Text style={styles.TotalOrders}>{ordersQuantity}</Text>
+                <Text style={styles.OrdersHeading}>{ordersTitle}</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity style={styles.OrderContainer}>
@@ -55,8 +60,8 @@ const HomeScreen = () => {
                 <MaterialIcons name="pending-actions" size={40} color="white" />
               </View>
               <View style={styles.OrderTextBox}>
-                <Text style={styles.TotalOrders}>10</Text>
-                <Text style={styles.OrdersHeading}>pending Orders</Text>
+                <Text style={styles.TotalOrders}>{ordersQuantity}</Text>
+                <Text style={styles.OrdersHeading}>{ordersTitle}</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -66,17 +71,20 @@ const HomeScreen = () => {
                 <Octicons name="checklist" size={40} color="white" />
               </View>
               <View style={styles.OrderTextBox}>
-                <Text style={styles.TotalOrders}>500</Text>
-                <Text style={styles.OrdersHeading}>Delivered Orders</Text>
+                <Text style={styles.TotalOrders}>{ordersQuantity}</Text>
+                <Text style={styles.OrdersHeading}>{ordersTitle}</Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.OrderContainer}>
+            <TouchableOpacity
+              style={styles.OrderContainer}
+              onPress={OnStandardOrders}
+            >
               <View style={styles.IconStyle}>
                 <Octicons name="list-ordered" size={40} color="white" />
               </View>
               <View style={styles.OrderTextBox}>
-                <Text style={styles.TotalOrders}>100</Text>
-                <Text style={styles.OrdersHeading}>Total Orders</Text>
+                <Text style={styles.TotalOrders}>{ordersQuantity}</Text>
+                <Text style={styles.OrdersHeading}>{ordersTitle}</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -144,7 +152,7 @@ const styles = StyleSheet.create({
   Txt1Style: {
     fontSize: 20,
     fontWeight: "900",
-    fontFamily: "Arial",
+    //fontFamily: "Arial",
     fontStyle: "normal",
     color: "#16a085",
     // backgroundColor: "blue",
@@ -152,7 +160,7 @@ const styles = StyleSheet.create({
   Txt2Style: {
     fontSize: 13,
     fontWeight: "500",
-    fontFamily: "Arial",
+    //fontFamily: "Arial",
     fontStyle: "normal",
     color: "black",
     marginTop: 6,
@@ -211,7 +219,7 @@ const styles = StyleSheet.create({
   OrdersHeading: {
     fontSize: 20,
     textAlign: "center",
-    fontFamily: "Arial",
+    //fontFamily: "Arial",
     fontWeight: "bold",
     color: "#16a085",
   },

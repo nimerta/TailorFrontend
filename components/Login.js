@@ -12,8 +12,8 @@ import axios from "axios";
 import { mainIp } from "../IP_Configuration";
 
 const Login = ({ navigation }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("mehakbai21@gmail.com");
+  const [password, setPassword] = useState("123456@Az");
   const data = {
     email: email,
     password: password,
@@ -49,7 +49,7 @@ const Login = ({ navigation }) => {
         .then(async (onSuccess) => {
           console.log("on success:", onSuccess.data);
           if (onSuccess.data.status === "200") {
-            console.log("k ji report aa seth: ");
+            console.log("ok report: ");
             alert("Login successful!");
             navigation.navigate("MainScreen", {
               data: onSuccess.data,
@@ -57,7 +57,7 @@ const Login = ({ navigation }) => {
             });
           } else {
             alert("invalid username and password");
-            console.log("maslo aa sahb: ", onSuccess.data);
+            console.log("big problem: ", onSuccess.data);
           }
         })
         .catch(async (onSuccessError) => {
