@@ -13,6 +13,7 @@ import Loading from "./components/Loaders/Loading";
 import StandardOrder from "./components/StandardOrder";
 import SummaryScreen from "./components/SummaryScreen";
 import OrderStatusScreen from "./components/OrderStatusScreen";
+import CustomOrderScreen from "./components/CustomOrderScreen";
 //import BottomNavigator from "./components/BottomNavigator";
 const Stack = createNativeStackNavigator();
 
@@ -73,6 +74,11 @@ export default function App() {
         <Stack.Screen
           name="OrderStatusScreen"
           component={OrderStatusScreen}
+          //options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="CustomOrderScreen"
+          component={CustomOrderScreen}
           //options={{ headerShown: false }}
         />
       </Stack.Navigator>

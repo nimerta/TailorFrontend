@@ -10,7 +10,7 @@ const HomeScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [ordersQuantity, setOrdersQuantity] = useState("20");
   const [fullName, setFullname] = useState("Mehak jagwani");
-  const [ordersTitle, setOrdersTitle] = useState("Standard orders");
+  //const [ordersTitle, setOrdersTitle] = useState("Standard orders");
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
@@ -19,6 +19,9 @@ const HomeScreen = ({ navigation }) => {
 
   const OnStandardOrders = () => {
     navigation.navigate("StandardOrder");
+  };
+  const OnCustomOrders = () => {
+    navigation.navigate("CustomOrderScreen");
   };
   return (
     <View style={styles.Container}>
@@ -46,13 +49,16 @@ const HomeScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
           <View style={styles.OrdersMainBox}>
-            <TouchableOpacity style={styles.OrderContainer}>
+            <TouchableOpacity
+              style={styles.OrderContainer}
+              onPress={OnCustomOrders}
+            >
               <View style={styles.IconStyle}>
                 <MaterialIcons name="shopping-cart" size={40} color="white" />
               </View>
               <View style={styles.OrderTextBox}>
                 <Text style={styles.TotalOrders}>{ordersQuantity}</Text>
-                <Text style={styles.OrdersHeading}>{ordersTitle}</Text>
+                <Text style={styles.OrdersHeading}>Custom Orders</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity style={styles.OrderContainer}>
@@ -61,7 +67,7 @@ const HomeScreen = ({ navigation }) => {
               </View>
               <View style={styles.OrderTextBox}>
                 <Text style={styles.TotalOrders}>{ordersQuantity}</Text>
-                <Text style={styles.OrdersHeading}>{ordersTitle}</Text>
+                <Text style={styles.OrdersHeading}>pending Orders</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -72,7 +78,7 @@ const HomeScreen = ({ navigation }) => {
               </View>
               <View style={styles.OrderTextBox}>
                 <Text style={styles.TotalOrders}>{ordersQuantity}</Text>
-                <Text style={styles.OrdersHeading}>{ordersTitle}</Text>
+                <Text style={styles.OrdersHeading}>Total Orders</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity
@@ -84,7 +90,7 @@ const HomeScreen = ({ navigation }) => {
               </View>
               <View style={styles.OrderTextBox}>
                 <Text style={styles.TotalOrders}>{ordersQuantity}</Text>
-                <Text style={styles.OrdersHeading}>{ordersTitle}</Text>
+                <Text style={styles.OrdersHeading}>Standard Orders</Text>
               </View>
             </TouchableOpacity>
           </View>

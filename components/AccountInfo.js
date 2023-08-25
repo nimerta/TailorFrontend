@@ -76,6 +76,8 @@ const AccountInfo = ({ navigation, route }) => {
       phone_no: PersonalData.phoneNo,
       gender: PersonalData.selectedGender,
       address: PersonalData.address,
+      main_area: PersonalData.selectedArea,
+      city: PersonalData.city,
     };
 
     console.log("body data: ", bodyData);

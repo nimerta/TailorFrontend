@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Picker } from "@react-native-picker/picker";
 
 import {
@@ -7,18 +7,26 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  ScrollView,
 } from "react-native";
+import { mainIp } from "../IP_Configuration";
+import axios from "axios";
+// import { ScrollView } from "react-native-gesture-handler";
 
 const PersonalInfo = ({ navigation, route }) => {
   const [fullname, setFullName] = useState("");
   const [address, setAddress] = useState("");
   const [phoneNo, setPhoneNo] = useState("");
-  const [selectedGender, setSelectedGender] = useState("");
+  const [selectedGender, setSelectedGender] = useState("female");
+  const [selectedArea, setSelectedArea] = useState("");
   const PersonalData = {
     fullname: fullname,
     address: address,
     phoneNo: phoneNo,
-    selectedGender: selectedGender,
+    selectedGender: "female",
+    selectedArea: selectedArea,
+    city: "Karachi",
   };
   const onNext = () => {
     if (!fullname || fullname.trim().length === 0) {
@@ -80,6 +88,7 @@ const PersonalInfo = ({ navigation, route }) => {
     setAddress("");
     setPhoneNo("");
     setSelectedGender("");
+    setSelectedArea("");
   };
 
   const genderOptions = [
@@ -87,12 +96,36 @@ const PersonalInfo = ({ navigation, route }) => {
     { label: "Female", value: "female" },
     { label: "Other", value: "other" },
   ];
+  const areaOptions = [
+    { label: "clifton", value: "clifton" },
+    { label: "Phase 2", value: "phase 2" },
+    { label: "tariq road", value: "tariq road" },
+  ];
+
+  const [areas, setAreas] = useState([]);
+
+  const getAllAreas = async () => {
+    var api = await axios
+      .get(`http://${mainIp}/api/area/get-all-areas`)
+      .then((onGet) => {
+        setAreas(onGet.data.allAreas);
+        console.log("jkfhgk");
+      })
+      .catch((onError) => {
+        console.log("error on getting areas: ", onError);
+      });
+  };
+
+  useEffect(() => {
+    getAllAreas();
+  }, []);
 
   return (
-    <View style={styles.mainContainer}>
+    <ScrollView style={styles.mainContainer}>
       <View style={styles.container}>
         <Text style={styles.mainHeader}>Personal Information</Text>
       </View>
+
       <View style={styles.inputContainer}>
         <Text style={styles.labels}>Full Name</Text>
         <TextInput
@@ -102,17 +135,6 @@ const PersonalInfo = ({ navigation, route }) => {
           autoCorrect={false}
           onChangeText={setFullName}
           value={fullname}
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.labels}>Address</Text>
-        <TextInput
-          placeholder="Enter your Address"
-          style={styles.inputfield}
-          autoCapitalize="none"
-          autoCorrect={false}
-          onChangeText={setAddress}
-          value={address}
         />
       </View>
       <View style={styles.inputContainer}>
@@ -126,7 +148,37 @@ const PersonalInfo = ({ navigation, route }) => {
           value={phoneNo}
         />
       </View>
+      <View style={styles.inputContainer}>
+        <Text style={styles.labels}>Address</Text>
+        <TextInput
+          placeholder="Enter your Address"
+          style={styles.inputfield}
+          autoCapitalize="none"
+          autoCorrect={false}
+          onChangeText={setAddress}
+          value={address}
+        />
+      </View>
       <View>
+        <Text style={styles.labels}>Area</Text>
+        <View style={styles.pickStyle}>
+          <Picker
+            style={styles.genderPicker}
+            selectedValue={selectedArea}
+            onValueChange={(itemValue, itemIndex) => setSelectedArea(itemValue)}
+          >
+            {areas.map((selectedArea) => (
+              <Picker.Item
+                key={selectedArea._id}
+                label={selectedArea.name}
+                value={selectedArea._id}
+              />
+            ))}
+          </Picker>
+        </View>
+      </View>
+
+      {/* <View>
         <Text style={styles.labels}>Gender</Text>
         <View style={styles.pickStyle}>
           <Picker
@@ -145,12 +197,12 @@ const PersonalInfo = ({ navigation, route }) => {
             ))}
           </Picker>
         </View>
-      </View>
+      </View> */}
 
       <TouchableOpacity onPress={onNext} style={styles.btn1}>
         <Text style={styles.btnText}>Next </Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -232,10 +284,13 @@ const styles = StyleSheet.create({
   },
   pickStyle: {
     // width: 300,
+    // height: 20,
+    top: 20,
   },
   genderPicker: {
     width: "100%",
     top: -85,
+    // backgroundColor: "yellow",
   },
 });
 export default PersonalInfo;
