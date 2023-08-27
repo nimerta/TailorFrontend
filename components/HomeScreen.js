@@ -9,7 +9,7 @@ import Octicons from "react-native-vector-icons/Octicons";
 const HomeScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [ordersQuantity, setOrdersQuantity] = useState("20");
-  const [fullName, setFullname] = useState("Mehak jagwani");
+  const [fullName, setFullname] = useState("");
   //const [ordersTitle, setOrdersTitle] = useState("Standard orders");
   useEffect(() => {
     setTimeout(() => {
@@ -21,7 +21,7 @@ const HomeScreen = ({ navigation }) => {
     navigation.navigate("StandardOrder");
   };
   const OnCustomOrders = () => {
-    navigation.navigate("CustomOrderScreen");
+    navigation.navigate("CustomOrders");
   };
   return (
     <View style={styles.Container}>

@@ -12,21 +12,23 @@ import {
 } from "react-native";
 import { mainIp } from "../IP_Configuration";
 import axios from "axios";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 // import { ScrollView } from "react-native-gesture-handler";
 
 const PersonalInfo = ({ navigation, route }) => {
   const [fullname, setFullName] = useState("");
   const [address, setAddress] = useState("");
   const [phoneNo, setPhoneNo] = useState("");
-  const [selectedGender, setSelectedGender] = useState("female");
+  const [selectedGender, setSelectedGender] = useState("");
   const [selectedArea, setSelectedArea] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
   const PersonalData = {
     fullname: fullname,
     address: address,
     phoneNo: phoneNo,
-    selectedGender: "female",
+    selectedGender: selectedGender,
     selectedArea: selectedArea,
-    city: "Karachi",
+    selectedCity: selectedCity,
   };
   const onNext = () => {
     if (!fullname || fullname.trim().length === 0) {
@@ -89,6 +91,7 @@ const PersonalInfo = ({ navigation, route }) => {
     setPhoneNo("");
     setSelectedGender("");
     setSelectedArea("");
+    setSelectedCity("");
   };
 
   const genderOptions = [
@@ -96,10 +99,13 @@ const PersonalInfo = ({ navigation, route }) => {
     { label: "Female", value: "female" },
     { label: "Other", value: "other" },
   ];
-  const areaOptions = [
-    { label: "clifton", value: "clifton" },
-    { label: "Phase 2", value: "phase 2" },
-    { label: "tariq road", value: "tariq road" },
+  const cityOptions = [
+    { label: "karachi", value: "karachi" },
+    { label: "Sukkar", value: "Sukkar" },
+    { label: "Hyderabad", value: "Hyderabad" },
+    { label: "Islamabad", value: "Islamabad" },
+    { label: "Lahore", value: "Lahore" },
+    { label: "Multan", value: "Multan" },
   ];
 
   const [areas, setAreas] = useState([]);
@@ -121,88 +127,111 @@ const PersonalInfo = ({ navigation, route }) => {
   }, []);
 
   return (
-    <ScrollView style={styles.mainContainer}>
-      <View style={styles.container}>
-        <Text style={styles.mainHeader}>Personal Information</Text>
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.labels}>Full Name</Text>
-        <TextInput
-          placeholder="Enter your Name"
-          style={styles.inputfield}
-          autoCapitalize="none"
-          autoCorrect={false}
-          onChangeText={setFullName}
-          value={fullname}
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.labels}>Phone Number</Text>
-        <TextInput
-          placeholder="Enter your Phone No"
-          style={styles.inputfield}
-          autoCapitalize="none"
-          autoCorrect={false}
-          onChangeText={setPhoneNo}
-          value={phoneNo}
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.labels}>Address</Text>
-        <TextInput
-          placeholder="Enter your Address"
-          style={styles.inputfield}
-          autoCapitalize="none"
-          autoCorrect={false}
-          onChangeText={setAddress}
-          value={address}
-        />
-      </View>
-      <View>
-        <Text style={styles.labels}>Area</Text>
-        <View style={styles.pickStyle}>
-          <Picker
-            style={styles.genderPicker}
-            selectedValue={selectedArea}
-            onValueChange={(itemValue, itemIndex) => setSelectedArea(itemValue)}
-          >
-            {areas.map((selectedArea) => (
-              <Picker.Item
-                key={selectedArea._id}
-                label={selectedArea.name}
-                value={selectedArea._id}
-              />
-            ))}
-          </Picker>
+    <View style={styles.mainContainer}>
+      <KeyboardAwareScrollView>
+        <View style={styles.container}>
+          <Text style={styles.mainHeader}>Personal Information</Text>
         </View>
-      </View>
 
-      {/* <View>
-        <Text style={styles.labels}>Gender</Text>
-        <View style={styles.pickStyle}>
-          <Picker
-            style={styles.genderPicker}
-            selectedValue={selectedGender}
-            onValueChange={(itemValue, itemIndex) =>
-              setSelectedGender(itemValue)
-            }
-          >
-            {genderOptions.map((selectedGender) => (
-              <Picker.Item
-                key={selectedGender.value}
-                label={selectedGender.label}
-                value={selectedGender.value}
-              />
-            ))}
-          </Picker>
+        <View style={styles.inputContainer}>
+          <Text style={styles.labels}>Full Name</Text>
+          <TextInput
+            placeholder="Enter your Name"
+            style={styles.inputfield}
+            autoCapitalize="none"
+            autoCorrect={false}
+            onChangeText={setFullName}
+            value={fullname}
+          />
         </View>
-      </View> */}
+        <View style={styles.inputContainer}>
+          <Text style={styles.labels}>Phone Number</Text>
+          <TextInput
+            placeholder="Enter your Phone No"
+            style={styles.inputfield}
+            autoCapitalize="none"
+            autoCorrect={false}
+            onChangeText={setPhoneNo}
+            value={phoneNo}
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.labels}>Address</Text>
+          <TextInput
+            placeholder="Enter your Address"
+            style={styles.inputfield}
+            autoCapitalize="none"
+            autoCorrect={false}
+            onChangeText={setAddress}
+            value={address}
+          />
+        </View>
+        <View>
+          <Text style={styles.labels}>Area</Text>
+          <View style={styles.pickStyle}>
+            <Picker
+              style={styles.areaPicker}
+              selectedValue={selectedArea}
+              onValueChange={(itemValue, itemIndex) =>
+                setSelectedArea(itemValue)
+              }
+            >
+              {areas.map((selectedArea) => (
+                <Picker.Item
+                  key={selectedArea._id}
+                  label={selectedArea.name}
+                  value={selectedArea._id}
+                />
+              ))}
+            </Picker>
+          </View>
+        </View>
 
-      <TouchableOpacity onPress={onNext} style={styles.btn1}>
-        <Text style={styles.btnText}>Next </Text>
-      </TouchableOpacity>
-    </ScrollView>
+        <View>
+          <Text style={styles.labels}>city</Text>
+          <View style={styles.pickStyle}>
+            <Picker
+              style={styles.genderPicker}
+              selectedValue={selectedCity}
+              onValueChange={(itemValue, itemIndex) =>
+                setSelectedCity(itemValue)
+              }
+            >
+              {cityOptions.map((selectedCity) => (
+                <Picker.Item
+                  key={selectedCity.value}
+                  label={selectedCity.label}
+                  value={selectedCity.value}
+                />
+              ))}
+            </Picker>
+          </View>
+        </View>
+        <View>
+          <Text style={styles.labels}>Gender</Text>
+          <View style={styles.pickStyle}>
+            <Picker
+              style={styles.genderPicker}
+              selectedValue={selectedGender}
+              onValueChange={(itemValue, itemIndex) =>
+                setSelectedGender(itemValue)
+              }
+            >
+              {genderOptions.map((selectedGender) => (
+                <Picker.Item
+                  key={selectedGender.value}
+                  label={selectedGender.label}
+                  value={selectedGender.value}
+                />
+              ))}
+            </Picker>
+          </View>
+        </View>
+        <TouchableOpacity onPress={onNext} style={styles.btn1}>
+          <Text style={styles.btnText}>Next </Text>
+        </TouchableOpacity>
+      </KeyboardAwareScrollView>
+    </View>
   );
 };
 
@@ -228,8 +257,8 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: "100%",
-    height: "12%",
-
+    height: 95,
+    //backgroundColor: "yellow",
     // borderTopLeftRadius: "130",
     // paddingTop: "100",
     Display: "flex",
@@ -240,7 +269,7 @@ const styles = StyleSheet.create({
     color: "black",
     marginLeft: "4%",
     marginBottom: "2%",
-    // marginTop: "2%",
+    marginTop: -30,
   },
   inputfield: {
     backgroundColor: "#EEF1F6",
@@ -260,15 +289,15 @@ const styles = StyleSheet.create({
   },
   btn1: {
     backgroundColor: "#16a085",
-    height: "6%",
+    height: 50,
     width: "35%",
     borderRadius: 18,
     alignItems: "center",
     justifyContent: "center",
     // marginVertical: "10%",
     // marginLeft: "2%",
-    position: "relative",
-    top: 50,
+    //position: "relative",
+    top: -60,
     left: 250,
   },
   btnText: {
@@ -285,12 +314,19 @@ const styles = StyleSheet.create({
   pickStyle: {
     // width: 300,
     // height: 20,
-    top: 20,
+    top: 10,
   },
   genderPicker: {
     width: "100%",
     top: -85,
-    // backgroundColor: "yellow",
+
+    //backgroundColor: "yellow",
+  },
+  areaPicker: {
+    width: "100%",
+    top: -80,
+
+    //backgroundColor: "yellow",
   },
 });
 export default PersonalInfo;
