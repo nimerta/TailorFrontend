@@ -27,7 +27,7 @@ const ViewCustomOrder = ({ navigation, route }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [imageModalVisible, setImageModalVisible] = useState(false);
   const [offerModalVisible, setOfferModalVisible] = useState(false);
-
+  const [images, setImages] = useState("");
   const [offerPrice, setOfferPrice] = useState("");
   const [isSendingOffer, setIsSendingOffer] = useState(false);
   const [isLoadingVisible, setIsLoadingVisible] = useState(false);
@@ -52,7 +52,7 @@ const ViewCustomOrder = ({ navigation, route }) => {
         setIsLoadingVisible(false); // Stop loading animation
         setOfferModalVisible(false);
         navigation.navigate("CustomOrders"); // Navigate to home screen
-      }, 3000); // Delay in milliseconds, e.g., 3000ms = 3 seconds
+      }, 2000); // Delay in milliseconds, e.g., 3000ms = 3 seconds
     }
   };
 

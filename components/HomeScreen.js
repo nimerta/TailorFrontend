@@ -6,12 +6,15 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import BottomNavigator from "./BottomNavigator.js";
 import Octicons from "react-native-vector-icons/Octicons";
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ navigation, route }) => {
+  //const { data, _id } = route.params;
+  //const { tailorId } = route.params;
   const [isLoading, setIsLoading] = useState(true);
   const [ordersQuantity, setOrdersQuantity] = useState("20");
   const [fullName, setFullname] = useState("");
   //const [ordersTitle, setOrdersTitle] = useState("Standard orders");
   useEffect(() => {
+    // console.log("tailor id ", route.params.data);
     setTimeout(() => {
       setIsLoading(false);
     }, 3000);
@@ -21,7 +24,10 @@ const HomeScreen = ({ navigation }) => {
     navigation.navigate("StandardOrder");
   };
   const OnCustomOrders = () => {
-    navigation.navigate("CustomOrders");
+    //console.log("tailor id", data);
+    console.log("got tailor ");
+    navigation.navigate("CustomOrders", { tailor_id: route.params });
+    console.log("got tailor id ");
   };
   return (
     <View style={styles.Container}>

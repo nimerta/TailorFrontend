@@ -51,6 +51,7 @@ const Login = ({ navigation }) => {
           if (onSuccess.data.status === "200") {
             console.log("ok report: ");
             alert("Login successful!");
+            //console.log("Data before navigating:", data);
             navigation.navigate("MainScreen", {
               data: onSuccess.data,
               _id: onSuccess.data.singleTailor._id,

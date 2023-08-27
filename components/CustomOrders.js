@@ -2,19 +2,20 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, FlatList, Image } from "react-native";
 
 const CustomOrders = ({ navigation }) => {
-  const [customerName, setCustomerName] = useState("");
+  const [name, setName] = useState("");
   const [orderPlacedDate, setOrderPlacedDate] = useState("");
   const [category, setCategory] = useState("");
   const [area, setArea] = useState("");
-  const [priceOffered, setPriceOffered] = useState("");
+  const [price, setPrice] = useState("");
+  const [designImage, setDesignImage] = useState("");
 
   const customOrderData = {
-    customerName: customerName,
+    name: name,
     orderPlacedDate: orderPlacedDate,
     category: category,
     area: area,
-    priceOffered: priceOffered,
-    designImage: item.designImage,
+    price: price,
+    designImage: designImage,
   };
   const [customOrders, setCustomOrders] = useState([
     {

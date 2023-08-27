@@ -10,6 +10,12 @@ import {
 import { FontAwesome5 } from "@expo/vector-icons";
 
 const StandardOrder = ({ navigation }) => {
+  const [customerName, setCustomerName] = useState("");
+  const [price, setPrice] = useState("");
+  const [image, setImage] = useState("");
+  const [date, setDate] = useState("");
+  const [title, setTitle] = useState("");
+
   const [cartItems, setCartItems] = useState([
     {
       id: 1,
@@ -71,7 +77,7 @@ const StandardOrder = ({ navigation }) => {
       id: 8,
       name: "Blouse",
       price: 49.99,
-      customerName: "Nimerta",
+      customerName: "Nimerta jagwani",
       date: "july 6,2023",
       image: require("../Images/mobile.jpg"),
     },
@@ -101,7 +107,7 @@ const StandardOrder = ({ navigation }) => {
         <View style={styles.cartItemDetails}>
           <View style={styles.headingContainer}>
             <Text style={styles.customerName}>{item.customerName}</Text>
-            <Text style={styles.cartItemPrice}>$ {item.price.toFixed(2)}</Text>
+            <Text style={styles.cartItemPrice}>Rs {item.price.toFixed(2)}</Text>
           </View>
 
           <Text style={styles.date}>{item.date}</Text>

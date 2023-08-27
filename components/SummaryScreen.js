@@ -22,6 +22,16 @@ const SummaryScreen = ({ navigation }) => {
     paymentMethod: "Credit Card",
   });
 
+  // Create state variables for attributes used in the order summary
+  const [customerName, setCustomerName] = useState(order.customerName);
+  const [address, setAddress] = useState(order.address);
+  const [phoneNo, setPhoneNo] = useState(order.phoneNo);
+  const [orderItems, setOrderItems] = useState(order.orderItems);
+  const [title, setTitle] = useState(order.date);
+  const [price, setPrice] = useState(order.date);
+  const [date, setDate] = useState(order.date);
+  const [paymentMethod, setPaymentMethod] = useState(order.paymentMethod);
+
   const handleUpdateStatus = () => {
     navigation.navigate("OrderStatusScreen");
   };
@@ -33,41 +43,33 @@ const SummaryScreen = ({ navigation }) => {
 
         {/* Customer Details */}
         <View style={styles.customerContainer}>
-          <Text>Customer Name: {order.customerName}</Text>
-          <Text>Address: {order.address}</Text>
-          <Text>Phone No: {order.phoneNo}</Text>
+          <Text>Customer Name: {customerName}</Text>
+          <Text>Address: {address}</Text>
+          <Text>Phone No: {phoneNo}</Text>
         </View>
 
         {/* Order Items */}
         <View style={styles.orderItemsContainer}>
           <Text>Order Items:</Text>
-          {order.orderItems.map((item) => (
+          {orderItems.map((item) => (
             <View key={item.id} style={styles.orderItemContainer}>
+              {/* ... (item image) */}
               <Image
                 source={require("../Images/mobile.jpg")}
                 style={styles.itemImage}
               />
               <View style={styles.itemDetailsContainer}>
                 <Text style={styles.itemTitle}>{item.title}</Text>
-                <Text style={styles.itemPrice}>$ {item.price.toFixed(2)}</Text>
+                <Text style={styles.itemPrice}>Rs {item.price.toFixed(2)}</Text>
               </View>
             </View>
           ))}
         </View>
 
-        <Text>Date: {order.date}</Text>
-        <Text>Payment Method: {order.paymentMethod}</Text>
+        <Text>Date: {date}</Text>
+        <Text>Payment Method: {paymentMethod}</Text>
 
-        {/* Total Price */}
-        <View style={styles.totalContainer}>
-          <Text style={styles.totalText}>Total Price:</Text>
-          <Text style={styles.totalPrice}>
-            ${" "}
-            {order.orderItems
-              .reduce((sum, item) => sum + item.price, 0)
-              .toFixed(2)}
-          </Text>
-        </View>
+        {/* ... (total price) */}
 
         <TouchableOpacity
           style={styles.updateStatusButton}
