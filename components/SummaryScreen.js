@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -7,23 +8,43 @@ import {
   Image,
   ScrollView,
 } from "react-native";
+import Ip from "../IP_Configuration";
 
-const SummaryScreen = ({ navigation }) => {
-  const [order, setOrder] = useState({
-    orderId: "12345",
-    customerName: "John Doe",
-    address: "123 Main St",
-    phoneNo: "555-1234",
-    orderItems: [
-      { id: 1, title: "Maxi Dress", price: 99.99 },
-      { id: 2, title: "Blouse", price: 49.99 },
-    ],
-    date: "July 6, 2023",
-    paymentMethod: "Credit Card",
-  });
+const SummaryScreen = ({ navigation, route }) => {
+  // const [order, setOrder] = useState({
+  //   orderId: "12345",
+  //   customerName: route.params.data.user.full_name,
+  //   address: "123 Main St",
+  //   phoneNo: route.params.data.user.phone_no,
+  //   orderItems: [
+  //     { id: 1, title: "Maxi Dress", price: 99.99 },
+  //     { id: 2, title: "Blouse", price: 49.99 },
+  //   ],
+  //   date: "July 6, 2023",
+  //   paymentMethod: route.params.data.payment_method,
+  // });
+
+  const [order, setOrder] = useState(route.params.data);
 
   const handleUpdateStatus = () => {
-    navigation.navigate("OrderStatusScreen");
+    navigation.navigate("OrderStatusScreen", {
+      data: order,
+    });
+  };
+
+  const completedOrder = async () => {
+    var apiResponse = await axios
+      .patch(
+        `http://${Ip.mainIp}/api/standard-order/complete-standard-order/${order._id}`
+      )
+      .then((onComplete) => {
+        console.log("on complete: ", onComplete.data);
+        alert(onComplete.data.message);
+        navigation.goBack();
+      })
+      .catch((onCompleteError) => {
+        console.log("on complete error: ", onCompleteError);
+      });
   };
 
   return (
@@ -33,48 +54,78 @@ const SummaryScreen = ({ navigation }) => {
 
         {/* Customer Details */}
         <View style={styles.customerContainer}>
-          <Text>Customer Name: {order.customerName}</Text>
-          <Text>Address: {order.address}</Text>
-          <Text>Phone No: {order.phoneNo}</Text>
+          <Text>Customer Name: {order.user.full_name}</Text>
+          {/* <Text>Address: {order.address.formatted_address}</Text> */}
+          <Text>Phone No: {order.user.phone_no}</Text>
         </View>
 
         {/* Order Items */}
         <View style={styles.orderItemsContainer}>
           <Text>Order Items:</Text>
-          {order.orderItems.map((item) => (
+          {order.items.map((item) => (
             <View key={item.id} style={styles.orderItemContainer}>
               <Image
-                source={require("../Images/mobile.jpg")}
+                source={{
+                  uri: item?.item?.image?.url,
+                }}
                 style={styles.itemImage}
               />
               <View style={styles.itemDetailsContainer}>
-                <Text style={styles.itemTitle}>{item.title}</Text>
-                <Text style={styles.itemPrice}>$ {item.price.toFixed(2)}</Text>
+                <Text style={styles.itemTitle}>{item.item.title}</Text>
+                <Text style={styles.itemPrice}>Rs {item.item.price}</Text>
               </View>
             </View>
           ))}
         </View>
 
-        <Text>Date: {order.date}</Text>
-        <Text>Payment Method: {order.paymentMethod}</Text>
+        <Text>
+          Date:{" "}
+          {`${new Date(order.createdAt).getDate()}-${new Date(
+            order.createdAt
+          ).getMonth()}-${new Date(order.createdAt).getFullYear()}`}
+        </Text>
+        <Text>Payment Method: {order.payment_method}</Text>
+        <Text>Order Status: {order.order_status}</Text>
 
         {/* Total Price */}
         <View style={styles.totalContainer}>
           <Text style={styles.totalText}>Total Price:</Text>
-          <Text style={styles.totalPrice}>
-            ${" "}
-            {order.orderItems
-              .reduce((sum, item) => sum + item.price, 0)
-              .toFixed(2)}
-          </Text>
+          <Text style={styles.totalPrice}>Rs {order.total_amount}</Text>
         </View>
 
-        <TouchableOpacity
+        {!order.completed && (
+          <TouchableOpacity
+            style={styles.updateStatusButton}
+            onPress={handleUpdateStatus}
+          >
+            <Text style={styles.updateStatusButtonText}>Update Status</Text>
+          </TouchableOpacity>
+        )}
+
+        {/* <TouchableOpacity
           style={styles.updateStatusButton}
           onPress={handleUpdateStatus}
         >
           <Text style={styles.updateStatusButtonText}>Update Status</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+
+        {!order.completed && (
+          <TouchableOpacity
+            style={styles.updateStatusButton}
+            onPress={() => {
+              completedOrder();
+            }}
+          >
+            <Text style={styles.updateStatusButtonText}>Complete Order</Text>
+          </TouchableOpacity>
+        )}
+
+        {/* <TouchableOpacity
+          style={styles.updateStatusButton}
+          onPress={handleUpdateStatus}
+        >
+          <Text style={styles.updateStatusButtonText}>Complete Order</Text>
+        </TouchableOpacity> */}
       </View>
     </ScrollView>
   );
@@ -125,6 +176,7 @@ const styles = StyleSheet.create({
   totalContainer: {
     flexDirection: "row",
     justifyContent: "flex-end",
+    marginTop: 20,
     marginBottom: 10,
   },
   totalText: {

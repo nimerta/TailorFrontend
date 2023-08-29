@@ -1,101 +1,66 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, FlatList, Image } from "react-native";
+import Ip from "../IP_Configuration";
 
-const CustomOrders = ({ navigation }) => {
+const CustomOrders = ({ navigation, route }) => {
   const [customerName, setCustomerName] = useState("");
   const [orderPlacedDate, setOrderPlacedDate] = useState("");
   const [category, setCategory] = useState("");
   const [area, setArea] = useState("");
   const [priceOffered, setPriceOffered] = useState("");
+  const [loggedInUser, setLoggedInUser] = useState(route.params.loggedInUser);
 
-  const customOrderData = {
-    customerName: customerName,
-    orderPlacedDate: orderPlacedDate,
-    category: category,
-    area: area,
-    priceOffered: priceOffered,
-    designImage: item.designImage,
+  // const [customOrders, setCustomOrders] = useState(
+  //   route.params.customOrdersData
+  // );
+
+  const [customOrders, setCustomOrders] = useState([]);
+
+  const getAllCustomOrders = async () => {
+    var apiResponse = await axios
+      .get(
+        `http://${Ip.mainIp}/api/custom-order/get-all-tailor-custom-orders/${route.params.loggedInUser._id}`
+      )
+      .then((onFound) => {
+        console.log("onFound: ", onFound.data);
+        setCustomOrders(onFound.data.allCustomOrders.custom_orders);
+      })
+      .catch((onFoundError) => {
+        console.log("onFoundError: ", onFoundError);
+      });
+
+    // setCustomOrders(apiResponse.data.allCustomOrders);
   };
-  const [customOrders, setCustomOrders] = useState([
-    {
-      id: 1,
-      customerName: "John Doe",
-      orderPlacedDate: "july 6,2023",
-      category: "Shirt",
-      area: "Tariq road",
-      priceOffered: "50",
-      designImage: require("../Images/mobile.jpg"),
-    },
-    {
-      id: 2,
-      customerName: "John Doe",
-      orderPlacedDate: "may 23,2023",
-      category: "Shirt",
-      area: "Tariq road",
-      priceOffered: "1000",
-      designImage: require("../Images/mobile.jpg"),
-    },
-    {
-      id: 3,
-      customerName: "John Doe",
-      orderPlacedDate: "2023-08-25",
-      category: "Shirt",
-      area: "Tariq road",
-      priceOffered: "2000",
-      designImage: require("../Images/mobile.jpg"),
-    },
-    {
-      id: 4,
-      customerName: "John Doe",
-      orderPlacedDate: "2023-08-25",
-      category: "Shirt",
-      area: "Tariq road",
-      priceOffered: "5900",
-      designImage: require("../Images/mobile.jpg"),
-    },
-    {
-      id: 5,
-      customerName: "John Doe",
-      orderPlacedDate: "2023-08-25",
-      category: "Shirt",
-      area: "Tariq road",
-      priceOffered: "2350",
-      designImage: require("../Images/mobile.jpg"),
-    },
-    {
-      id: 6,
-      customerName: "John Doe",
-      orderPlacedDate: "2023-08-25",
-      category: "Shirt",
-      area: "Tariq road",
-      priceOffered: "550",
-      designImage: require("../Images/mobile.jpg"),
-    },
-    {
-      id: 7,
-      customerName: "John Doe",
-      orderPlacedDate: "2023-08-25",
-      category: "Shirt",
-      area: "Tariq road",
-      priceOffered: "5550",
-      designImage: require("../Images/mobile.jpg"),
-    },
 
-    // Add more dummy orders
-  ]);
+  useEffect(() => {
+    // setInterval(() => {
+    //   getAllCustomOrders();
+    // }, 2000);
+
+    getAllCustomOrders();
+
+    console.log("customOrders: ", customOrders);
+  }, []);
+
   const renderOrderItem = ({ item }) => (
     <View style={styles.orderContainer}>
       <View style={styles.orderItem}>
         <Image
-          source={item.designImage} // Replace with: source={require(item.designImage)}
+          // source={item.designImage} // Replace with: source={require(item.designImage)}
+          source={{ uri: item.images[0].url }} // Replace with: source={require(item.designImage)}
           style={styles.thumbnailImage}
         />
         <View style={styles.orderDetails}>
-          <Text style={styles.customerName}>{item.customerName}</Text>
-          <Text style={styles.orderPlacedDate}>{item.orderPlacedDate}</Text>
+          <Text style={styles.customerName}>{item.user.full_name}</Text>
+          <Text style={styles.orderPlacedDate}>
+            {`${new Date(item.createdAt).getDate()}-${new Date(
+              item.createdAt
+            ).getMonth()}-${new Date(item.createdAt).getFullYear()}`}
+          </Text>
           <Text style={styles.TxtStyle}>{item.category}</Text>
-          <Text style={styles.TxtStyle}>{item.area}</Text>
-          <Text style={styles.TxtStyle}>Rs {item.priceOffered}</Text>
+          <Text style={styles.TxtStyle}>{item.order_area?.name}</Text>
+          <Text style={styles.TxtStyle}>Rs {item.total_amount}</Text>
         </View>
         <TouchableOpacity
           style={styles.viewButton}
@@ -103,6 +68,7 @@ const CustomOrders = ({ navigation }) => {
             // navigation.navigate("ViewCustomOrder", { orderId: item.id })
             navigation.navigate("ViewCustomOrder", {
               data: item,
+              loggedInUser: loggedInUser,
             })
           }
         >
@@ -118,7 +84,7 @@ const CustomOrders = ({ navigation }) => {
       <FlatList
         data={customOrders}
         renderItem={renderOrderItem}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item._id.toString()}
       />
     </View>
   );

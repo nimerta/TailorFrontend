@@ -5,11 +5,23 @@ import Loading from "./Loaders/Loading.js";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import BottomNavigator from "./BottomNavigator.js";
 import Octicons from "react-native-vector-icons/Octicons";
+import axios from "axios";
+import Ip from "../IP_Configuration.js";
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ navigation, route }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [ordersQuantity, setOrdersQuantity] = useState("20");
-  const [fullName, setFullname] = useState("");
+  const [customOrdersQty, setCustomOrdersQty] = useState(
+    route.params.loggedInUser.custom_orders.length
+  );
+  const [fullName, setFullname] = useState(route.params.loggedInUser.full_name);
+  const [loggedInUser, setLoggedInUser] = useState(route.params.loggedInUser);
+  const [userId, setUserId] = useState(route.params.user);
+  const [greetingMessage, setGreetingMessage] = useState("");
+  const [standardOrdersQty, setStandardOrdersQty] = useState(0);
+  const [totalOrderQty, setTotalOrderQty] = useState(
+    standardOrdersQty + customOrdersQty
+  );
   //const [ordersTitle, setOrdersTitle] = useState("Standard orders");
   useEffect(() => {
     setTimeout(() => {
@@ -18,11 +30,52 @@ const HomeScreen = ({ navigation }) => {
   }, []);
 
   const OnStandardOrders = () => {
-    navigation.navigate("StandardOrder");
+    navigation.navigate("StandardOrder", {
+      loggedInUser: loggedInUser,
+    });
   };
   const OnCustomOrders = () => {
-    navigation.navigate("CustomOrders");
+    navigation.navigate("CustomOrders", {
+      customOrdersData: loggedInUser.custom_orders,
+      loggedInUser: loggedInUser,
+    });
   };
+
+  const getGreeting = () => {
+    const currentTime = new Date();
+    const currentHour = currentTime.getHours();
+
+    if (currentHour >= 5 && currentHour < 12) {
+      return "Good Morning!";
+    } else if (currentHour >= 12 && currentHour < 17) {
+      return "Good Afternoon!";
+    } else if (currentHour >= 17 && currentHour < 21) {
+      return "Good Evening!";
+    } else {
+      return "Good Night!";
+    }
+  };
+  const getAllStandardOrders = async () => {
+    var apiResponse = await axios
+      .get(
+        `http://${Ip.mainIp}/api/standard-order/get-all-tailor-standard-order/${loggedInUser?._id}`
+      )
+      .then((onFound) => {
+        console.log("onFound: ", onFound.data);
+        setStandardOrdersQty(onFound.data.allOrders.length);
+        setTotalOrderQty(standardOrdersQty + customOrdersQty);
+      })
+      .catch((onFoundError) => {
+        console.log("onFoundError: ", onFoundError);
+      });
+  };
+
+  useEffect(() => {
+    setGreetingMessage(getGreeting());
+    console.log(" loggedInUser.image.url: ", loggedInUser);
+    getAllStandardOrders();
+  }, []);
+
   return (
     <View style={styles.Container}>
       {isLoading ? (
@@ -33,20 +86,26 @@ const HomeScreen = ({ navigation }) => {
             <View style={styles.ProfileBox}>
               <Image
                 style={styles.ProfileStyle}
-                source={require("../Images/mobile.jpg")}
+                // source={require("../Images/mobile.jpg")}
+                source={{
+                  uri:
+                    loggedInUser.image !== "" || loggedInUser.image === null
+                      ? loggedInUser.image.url
+                      : "https://w7.pngwing.com/pngs/205/731/png-transparent-default-avatar-thumbnail.png",
+                }}
               ></Image>
             </View>
             <View style={styles.TxtContainer}>
               <Text style={styles.Txt1Style}>{fullName}</Text>
               <Text style={styles.Txt2Style}>Good Morning!</Text>
             </View>
-            <TouchableOpacity style={styles.notifcationStyle}>
+            {/* <TouchableOpacity style={styles.notifcationStyle}>
               <MaterialIcons
                 name="notifications-none"
                 size={30}
                 color="black"
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
           <View style={styles.OrdersMainBox}>
             <TouchableOpacity
@@ -57,7 +116,7 @@ const HomeScreen = ({ navigation }) => {
                 <MaterialIcons name="shopping-cart" size={40} color="white" />
               </View>
               <View style={styles.OrderTextBox}>
-                <Text style={styles.TotalOrders}>{ordersQuantity}</Text>
+                <Text style={styles.TotalOrders}>{customOrdersQty}</Text>
                 <Text style={styles.OrdersHeading}>Custom Orders</Text>
               </View>
             </TouchableOpacity>
@@ -77,7 +136,7 @@ const HomeScreen = ({ navigation }) => {
                 <Octicons name="checklist" size={40} color="white" />
               </View>
               <View style={styles.OrderTextBox}>
-                <Text style={styles.TotalOrders}>{ordersQuantity}</Text>
+                <Text style={styles.TotalOrders}>{totalOrderQty}</Text>
                 <Text style={styles.OrdersHeading}>Total Orders</Text>
               </View>
             </TouchableOpacity>
@@ -89,7 +148,7 @@ const HomeScreen = ({ navigation }) => {
                 <Octicons name="list-ordered" size={40} color="white" />
               </View>
               <View style={styles.OrderTextBox}>
-                <Text style={styles.TotalOrders}>{ordersQuantity}</Text>
+                <Text style={styles.TotalOrders}>{standardOrdersQty}</Text>
                 <Text style={styles.OrdersHeading}>Standard Orders</Text>
               </View>
             </TouchableOpacity>

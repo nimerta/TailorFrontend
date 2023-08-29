@@ -1,16 +1,47 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import Ip from "../IP_Configuration";
 
-const OrderStatusScreen = ({ navigation }) => {
-  const [selectedStatus, setSelectedStatus] = useState("");
+const OrderStatusScreen = ({ navigation, route }) => {
+  const [selectedOrder, setSelectedOrder] = useState(route.params.data);
+  const [selectedStatus, setSelectedStatus] = useState(
+    selectedOrder.order_status
+  );
+
+  const orderTypes = {
+    PLACED: "PLACED",
+    PREPARING: "IN-PROCESS",
+    CONFIRMED: "CONFIRMED",
+    COMPLETED: "COMPLETED",
+    DELIVERED: "DELIVERED",
+  };
+
+  const updateOrderStatus = async () => {
+    const bodyData = {
+      updatedStatus: selectedStatus,
+    };
+    var apiResponse = await axios
+      .patch(
+        `http://${Ip.mainIp}/api/standard-order/update-standard-order-status/${selectedOrder._id}`,
+        bodyData
+      )
+      .then((onUpdate) => {
+        console.log("on update: ", onUpdate.data);
+      })
+      .catch((onUpdateError) => {
+        console.log("on update error: ", onUpdateError);
+      });
+  };
 
   const handleStatusChange = (status) => {
     setSelectedStatus(status);
   };
 
   const handleUpdateStatus = () => {
+    updateOrderStatus();
     alert("Order status updated successfully");
-    navigation.navigate("Home");
+    navigation.goBack();
   };
 
   return (
@@ -20,14 +51,15 @@ const OrderStatusScreen = ({ navigation }) => {
         <TouchableOpacity
           style={[
             styles.radioButton,
-            selectedStatus === "Placed" && styles.radioButtonSelected,
+            selectedStatus === orderTypes.PLACED && styles.radioButtonSelected,
           ]}
-          onPress={() => handleStatusChange("Placed")}
+          onPress={() => handleStatusChange(orderTypes.PLACED)}
         >
           <View
             style={[
               styles.radioButtonInner,
-              selectedStatus === "Placed" && styles.radioButtonInnerSelected,
+              selectedStatus === orderTypes.PLACED &&
+                styles.radioButtonInnerSelected,
             ]}
           />
           <Text style={styles.radioText}>Placed</Text>
@@ -35,14 +67,15 @@ const OrderStatusScreen = ({ navigation }) => {
         <TouchableOpacity
           style={[
             styles.radioButton,
-            selectedStatus === "In Process" && styles.radioButtonSelected,
+            selectedStatus === orderTypes.PREPARING &&
+              styles.radioButtonSelected,
           ]}
-          onPress={() => handleStatusChange("In Process")}
+          onPress={() => handleStatusChange(orderTypes.PREPARING)}
         >
           <View
             style={[
               styles.radioButtonInner,
-              selectedStatus === "In Process" &&
+              selectedStatus === orderTypes.PREPARING &&
                 styles.radioButtonInnerSelected,
             ]}
           />
@@ -51,14 +84,16 @@ const OrderStatusScreen = ({ navigation }) => {
         <TouchableOpacity
           style={[
             styles.radioButton,
-            selectedStatus === "Completed" && styles.radioButtonSelected,
+            selectedStatus === orderTypes.COMPLETED &&
+              styles.radioButtonSelected,
           ]}
-          onPress={() => handleStatusChange("Completed")}
+          onPress={() => handleStatusChange(orderTypes.COMPLETED)}
         >
           <View
             style={[
               styles.radioButtonInner,
-              selectedStatus === "Completed" && styles.radioButtonInnerSelected,
+              selectedStatus === orderTypes.COMPLETED &&
+                styles.radioButtonInnerSelected,
             ]}
           />
           <Text style={styles.radioText}>Completed</Text>
@@ -66,14 +101,16 @@ const OrderStatusScreen = ({ navigation }) => {
         <TouchableOpacity
           style={[
             styles.radioButton,
-            selectedStatus === "Delivered" && styles.radioButtonSelected,
+            selectedStatus === orderTypes.DELIVERED &&
+              styles.radioButtonSelected,
           ]}
-          onPress={() => handleStatusChange("Delivered")}
+          onPress={() => handleStatusChange(orderTypes.DELIVERED)}
         >
           <View
             style={[
               styles.radioButtonInner,
-              selectedStatus === "Delivered" && styles.radioButtonInnerSelected,
+              selectedStatus === orderTypes.DELIVERED &&
+                styles.radioButtonInnerSelected,
             ]}
           />
           <Text style={styles.radioText}>Delivered</Text>

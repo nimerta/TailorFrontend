@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -8,74 +8,100 @@ import {
   ScrollView,
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
+import axios from "axios";
+import Ip from "../IP_Configuration";
 
-const StandardOrder = ({ navigation }) => {
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: "Maxi Dress",
-      price: 99.99,
-      customerName: "Nimerta",
-      date: "july 6,2023",
-      image: require("../Images/mobile.jpg"),
-    },
-    {
-      id: 2,
-      name: "Blouse",
-      price: 49.99,
-      customerName: "Nimerta",
-      date: "july 6,2023",
-      image: require("../Images/mobile.jpg"),
-    },
-    {
-      id: 3,
-      name: "Maxi Dress",
-      price: 99.99,
-      customerName: "Nimerta",
-      date: "july 6,2023",
-      image: require("../Images/mobile.jpg"),
-    },
-    {
-      id: 4,
-      name: "Blouse",
-      price: 49.99,
-      customerName: "Nimerta",
-      date: "july 6,2023",
-      image: require("../Images/mobile.jpg"),
-    },
-    {
-      id: 5,
-      name: "Maxi Dress",
-      price: 99.99,
-      customerName: "Nimerta",
-      date: "july 6,2023",
-      image: require("../Images/mobile.jpg"),
-    },
-    {
-      id: 6,
-      name: "Blouse",
-      price: 49.99,
-      customerName: "Nimerta",
-      date: "july 6,2023",
-      image: require("../Images/mobile.jpg"),
-    },
-    {
-      id: 7,
-      name: "Maxi Dress",
-      price: 99.99,
-      customerName: "Nimerta",
-      date: "july 6,2023",
-      image: require("../Images/mobile.jpg"),
-    },
-    {
-      id: 8,
-      name: "Blouse",
-      price: 49.99,
-      customerName: "Nimerta",
-      date: "july 6,2023",
-      image: require("../Images/mobile.jpg"),
-    },
-  ]);
+const StandardOrder = ({ navigation, route }) => {
+  // const [cartItems, setCartItems] = useState([
+  //   {
+  //     id: 1,
+  //     name: "Maxi Dress",
+  //     price: 99.99,
+  //     customerName: "Nimerta",
+  //     date: "july 6,2023",
+  //     image: require("../Images/mobile.jpg"),
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Blouse",
+  //     price: 49.99,
+  //     customerName: "Nimerta",
+  //     date: "july 6,2023",
+  //     image: require("../Images/mobile.jpg"),
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "Maxi Dress",
+  //     price: 99.99,
+  //     customerName: "Nimerta",
+  //     date: "july 6,2023",
+  //     image: require("../Images/mobile.jpg"),
+  //   },
+  //   {
+  //     id: 4,
+  //     name: "Blouse",
+  //     price: 49.99,
+  //     customerName: "Nimerta",
+  //     date: "july 6,2023",
+  //     image: require("../Images/mobile.jpg"),
+  //   },
+  //   {
+  //     id: 5,
+  //     name: "Maxi Dress",
+  //     price: 99.99,
+  //     customerName: "Nimerta",
+  //     date: "july 6,2023",
+  //     image: require("../Images/mobile.jpg"),
+  //   },
+  //   {
+  //     id: 6,
+  //     name: "Blouse",
+  //     price: 49.99,
+  //     customerName: "Nimerta",
+  //     date: "july 6,2023",
+  //     image: require("../Images/mobile.jpg"),
+  //   },
+  //   {
+  //     id: 7,
+  //     name: "Maxi Dress",
+  //     price: 99.99,
+  //     customerName: "Nimerta",
+  //     date: "july 6,2023",
+  //     image: require("../Images/mobile.jpg"),
+  //   },
+  //   {
+  //     id: 8,
+  //     name: "Blouse",
+  //     price: 49.99,
+  //     customerName: "Nimerta",
+  //     date: "july 6,2023",
+  //     image: require("../Images/mobile.jpg"),
+  //   },
+  // ]);
+
+  const [cartItems, setCartItems] = useState([]);
+  const [loggedInUser, setLoggedInUser] = useState(route.params?.loggedInUser);
+
+  const getAllStandardOrders = async () => {
+    var apiResponse = await axios
+      .get(
+        `http://${Ip.mainIp}/api/standard-order/get-all-tailor-standard-order/${route.params.loggedInUser?._id}`
+      )
+      .then((onFound) => {
+        console.log("onFound: ", onFound.data);
+        setCartItems(onFound.data.allOrders);
+      })
+      .catch((onFoundError) => {
+        console.log("onFoundError: ", onFoundError);
+      });
+
+    // setCustomOrders(apiResponse.data.allCustomOrders);
+  };
+
+  useEffect(() => {
+    getAllStandardOrders();
+  }, []);
+
   //   const renderCartItem = (item) => {
   //     return (
   //       <View key={item.id} style={styles.cartItemContainer}>
@@ -87,25 +113,40 @@ const StandardOrder = ({ navigation }) => {
   //       </View>
   //     );
   //   };
-  const handleOrders = () => {
-    navigation.navigate("SummaryScreen");
+  const handleOrders = (item) => {
+    navigation.navigate("SummaryScreen", {
+      data: item,
+    });
   };
   const renderCartItem = (item) => {
     return (
       <TouchableOpacity
-        key={item.id}
+        key={item._id}
         style={styles.cartItemContainer}
-        onPress={handleOrders}
+        onPress={() => {
+          handleOrders(item);
+        }}
       >
-        <Image source={item.image} style={styles.cartItemImage} />
+        <Image
+          source={{
+            uri: item.items[0].item.image?.url,
+          }}
+          style={styles.cartItemImage}
+        />
         <View style={styles.cartItemDetails}>
           <View style={styles.headingContainer}>
-            <Text style={styles.customerName}>{item.customerName}</Text>
-            <Text style={styles.cartItemPrice}>$ {item.price.toFixed(2)}</Text>
+            <Text style={styles.customerName}>{item.user?.full_name}</Text>
+            <Text style={styles.cartItemPrice}>$ {item?.total_amount}</Text>
           </View>
 
-          <Text style={styles.date}>{item.date}</Text>
-          <Text style={styles.cartItemTitle}>{item.name}</Text>
+          <Text style={styles.date}>{`${new Date(
+            item.createdAt
+          ).getDate()}-${new Date(item.createdAt).getMonth()}-${new Date(
+            item.createdAt
+          ).getFullYear()}`}</Text>
+          <Text style={styles.cartItemTitle}>
+            {item?.items[0]?.item?.title}
+          </Text>
         </View>
       </TouchableOpacity>
     );

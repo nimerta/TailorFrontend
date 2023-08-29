@@ -11,30 +11,70 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import Loading from "./Loaders/Loading.js";
+import axios from "axios";
+import Ip from "../IP_Configuration.js";
 const ViewCustomOrder = ({ navigation, route }) => {
   //const { width, height } = Dimensions.get("window");
   const { customOrderData } = route.params;
-  const [address, setAddress] = useState(
-    "Tariq road hammeeda heights building near pizza one"
+  const [selectedCustomOrder, setSelectedCustomOrder] = useState(
+    route.params.data
   );
-  const [phoneNumber, setPhoneNumber] = useState("03114567890");
-  const [name, setName] = useState("Nimerta bai");
 
-  const [category, setCategory] = useState("Shirt Trouser");
-  const [fabric, setFabric] = useState("Cotton");
-  const [price, setPrice] = useState("5000");
-  const [instructions, setInstructions] = useState("Please make it elegant.");
+  const [address, setAddress] = useState(
+    selectedCustomOrder.address.formatted_address
+  );
+
+  const [phoneNumber, setPhoneNumber] = useState(
+    selectedCustomOrder.user.phone_no
+  );
+  const [name, setName] = useState(selectedCustomOrder.user.full_name);
+
+  const [category, setCategory] = useState(selectedCustomOrder.category);
+  const [fabric, setFabric] = useState(selectedCustomOrder.fabric);
+  const [price, setPrice] = useState(selectedCustomOrder.total_amount);
+  const [instructions, setInstructions] = useState(
+    selectedCustomOrder.instructions
+  );
+  const [orderImages, setOrderImages] = useState(selectedCustomOrder.images);
+
   const [selectedImage, setSelectedImage] = useState(null);
+
   const [imageModalVisible, setImageModalVisible] = useState(false);
   const [offerModalVisible, setOfferModalVisible] = useState(false);
 
   const [offerPrice, setOfferPrice] = useState("");
   const [isSendingOffer, setIsSendingOffer] = useState(false);
   const [isLoadingVisible, setIsLoadingVisible] = useState(false);
+  const [loggedInUser, setLoggedInUser] = useState(route.params.loggedInUser);
+
   const handleImagePress = (image) => {
-    setSelectedImage(image.source);
+    setSelectedImage(image.url);
     setImageModalVisible(true);
   };
+
+  const createCustomOrderOffer = async () => {
+    const bodyData = {
+      amount: offerPrice,
+      tailor_id: loggedInUser._id,
+      custom_order_id: selectedCustomOrder._id,
+    };
+    var apiResponse = await axios
+      .post(`http://${Ip.mainIp}/api/custom-order/create-order-offer`, bodyData)
+      .then((onOfferCreate) => {
+        console.log("onOfferCreate: ", onOfferCreate.data);
+        setIsLoadingVisible(false); // Stop loading animation
+        setOfferModalVisible(false);
+        alert(onOfferCreate.data.message);
+
+        navigation.navigate("CustomOrders", {
+          loggedInUser: loggedInUser,
+        });
+      })
+      .catch((onOfferCreateError) => {
+        console.log("onOfferCreateError: ", onOfferCreateError);
+      });
+  };
+
   useEffect(() => {
     setTimeout(() => {
       setIsLoadingVisible(false);
@@ -47,12 +87,16 @@ const ViewCustomOrder = ({ navigation, route }) => {
     } else {
       console.log("offer is send");
       setIsSendingOffer(true); // Start loading animation
-      setTimeout(() => {
-        console.log("offer is made");
-        setIsLoadingVisible(false); // Stop loading animation
-        setOfferModalVisible(false);
-        navigation.navigate("CustomOrders"); // Navigate to home screen
-      }, 3000); // Delay in milliseconds, e.g., 3000ms = 3 seconds
+      createCustomOrderOffer();
+
+      // setTimeout(() => {
+      //   console.log("offer is made");
+      //   setIsLoadingVisible(false); // Stop loading animation
+      //   setOfferModalVisible(false);
+      //   navigation.navigate("CustomOrders", {
+      //     loggedInUser: loggedInUser,
+      //   }); // Navigate to home screen
+      // }, 3000); // Delay in milliseconds, e.g., 3000ms = 3 seconds
     }
   };
 
@@ -83,12 +127,18 @@ const ViewCustomOrder = ({ navigation, route }) => {
         <View style={styles.orderSummaryContainer}>
           <Text style={styles.sectionHeading}>Order Summary</Text>
           <View style={styles.imagesContainer}>
-            {imageArray.map((image, index) => (
+            {orderImages.map((image, index) => (
               <TouchableOpacity
                 key={index}
                 onPress={() => handleImagePress(image)}
               >
-                <Image source={image.source} style={styles.thumbnailImage} />
+                <Image
+                  // source={image.source}
+                  source={{
+                    uri: image.url,
+                  }}
+                  style={styles.thumbnailImage}
+                />
               </TouchableOpacity>
             ))}
           </View>
@@ -102,7 +152,9 @@ const ViewCustomOrder = ({ navigation, route }) => {
             <View style={styles.modalContainer1}>
               <View style={styles.imageModal}>
                 <Image
-                  source={selectedImage}
+                  source={{
+                    uri: selectedImage,
+                  }}
                   style={styles.selectedImage}
                   resizeMode="contain"
                 />

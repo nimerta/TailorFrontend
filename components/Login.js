@@ -54,6 +54,7 @@ const Login = ({ navigation }) => {
             navigation.navigate("MainScreen", {
               data: onSuccess.data,
               _id: onSuccess.data.singleTailor._id,
+              loggedInUser: onSuccess.data.singleTailor,
             });
           } else {
             alert("invalid username and password");

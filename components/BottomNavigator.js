@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 //import HomeScreen from "./HomeScreen";
 import AddDesignScreen from "./AddDesignScreen";
@@ -17,6 +17,9 @@ const Tab = createBottomTabNavigator();
 
 const BottomNavigator = ({ navigation, route }) => {
   var routeData = route.params;
+  var [userId, setUserId] = useState(routeData._id);
+  var [loggedInUser, setLoggedInUser] = useState(routeData.loggedInUser);
+
   console.log(" route data: ", routeData._id);
 
   return (
@@ -88,6 +91,7 @@ const BottomNavigator = ({ navigation, route }) => {
         name="Home"
         component={HomeScreen}
         options={{ headerShown: false }}
+        initialParams={{ user: userId, loggedInUser: loggedInUser }}
       />
       <Tab.Screen
         name="AddDesign"
@@ -105,6 +109,16 @@ const BottomNavigator = ({ navigation, route }) => {
         name="Settings"
         component={SettingScreen}
         options={{ headerShown: false }}
+        listeners={() => ({
+          tabPress: (e) => {
+            // Your action here
+            console.log("profile tab pressed!", userId);
+            navigation.navigate("Settings", {
+              data: userId,
+              updatedUser: null,
+            });
+          },
+        })}
       />
     </Tab.Navigator>
   );
