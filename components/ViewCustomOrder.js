@@ -41,7 +41,7 @@ const ViewCustomOrder = ({ navigation, route }) => {
 
   const [imageModalVisible, setImageModalVisible] = useState(false);
   const [offerModalVisible, setOfferModalVisible] = useState(false);
-
+  const [images, setImages] = useState("");
   const [offerPrice, setOfferPrice] = useState("");
   const [isSendingOffer, setIsSendingOffer] = useState(false);
   const [isLoadingVisible, setIsLoadingVisible] = useState(false);
@@ -87,6 +87,7 @@ const ViewCustomOrder = ({ navigation, route }) => {
     } else {
       console.log("offer is send");
       setIsSendingOffer(true); // Start loading animation
+<<<<<<< HEAD
       createCustomOrderOffer();
 
       // setTimeout(() => {
@@ -97,6 +98,14 @@ const ViewCustomOrder = ({ navigation, route }) => {
       //     loggedInUser: loggedInUser,
       //   }); // Navigate to home screen
       // }, 3000); // Delay in milliseconds, e.g., 3000ms = 3 seconds
+=======
+      setTimeout(() => {
+        console.log("offer is made");
+        setIsLoadingVisible(false); // Stop loading animation
+        setOfferModalVisible(false);
+        navigation.navigate("CustomOrders"); // Navigate to home screen
+      }, 2000); // Delay in milliseconds, e.g., 3000ms = 3 seconds
+>>>>>>> afc9b6de9e1a1153cfff03199294611a5c147e25
     }
   };
 

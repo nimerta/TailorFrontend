@@ -102,6 +102,82 @@ const StandardOrder = ({ navigation, route }) => {
     getAllStandardOrders();
   }, []);
 
+<<<<<<< HEAD
+=======
+const StandardOrder = ({ navigation }) => {
+  const [customerName, setCustomerName] = useState("");
+  const [price, setPrice] = useState("");
+  const [image, setImage] = useState("");
+  const [date, setDate] = useState("");
+  const [title, setTitle] = useState("");
+
+  const [cartItems, setCartItems] = useState([
+    {
+      id: 1,
+      name: "Maxi Dress",
+      price: 99.99,
+      customerName: "Nimerta",
+      date: "july 6,2023",
+      image: require("../Images/mobile.jpg"),
+    },
+    {
+      id: 2,
+      name: "Blouse",
+      price: 49.99,
+      customerName: "Nimerta",
+      date: "july 6,2023",
+      image: require("../Images/mobile.jpg"),
+    },
+    {
+      id: 3,
+      name: "Maxi Dress",
+      price: 99.99,
+      customerName: "Nimerta",
+      date: "july 6,2023",
+      image: require("../Images/mobile.jpg"),
+    },
+    {
+      id: 4,
+      name: "Blouse",
+      price: 49.99,
+      customerName: "Nimerta",
+      date: "july 6,2023",
+      image: require("../Images/mobile.jpg"),
+    },
+    {
+      id: 5,
+      name: "Maxi Dress",
+      price: 99.99,
+      customerName: "Nimerta",
+      date: "july 6,2023",
+      image: require("../Images/mobile.jpg"),
+    },
+    {
+      id: 6,
+      name: "Blouse",
+      price: 49.99,
+      customerName: "Nimerta",
+      date: "july 6,2023",
+      image: require("../Images/mobile.jpg"),
+    },
+    {
+      id: 7,
+      name: "Maxi Dress",
+      price: 99.99,
+      customerName: "Nimerta",
+      date: "july 6,2023",
+      image: require("../Images/mobile.jpg"),
+    },
+    {
+      id: 8,
+      name: "Blouse",
+      price: 49.99,
+      customerName: "Nimerta jagwani",
+      date: "july 6,2023",
+      image: require("../Images/mobile.jpg"),
+    },
+  ]);
+>>>>>>> afc9b6de9e1a1153cfff03199294611a5c147e25
   //   const renderCartItem = (item) => {
   //     return (
   //       <View key={item.id} style={styles.cartItemContainer}>
@@ -135,8 +211,13 @@ const StandardOrder = ({ navigation, route }) => {
         />
         <View style={styles.cartItemDetails}>
           <View style={styles.headingContainer}>
+<<<<<<< HEAD
             <Text style={styles.customerName}>{item.user?.full_name}</Text>
             <Text style={styles.cartItemPrice}>$ {item?.total_amount}</Text>
+=======
+            <Text style={styles.customerName}>{item.customerName}</Text>
+            <Text style={styles.cartItemPrice}>Rs {item.price.toFixed(2)}</Text>
+>>>>>>> afc9b6de9e1a1153cfff03199294611a5c147e25
           </View>
 
           <Text style={styles.date}>{`${new Date(
