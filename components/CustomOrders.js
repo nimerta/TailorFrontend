@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, FlatList, Image } from "react-native";
 import Ip from "../IP_Configuration";
 
-<<<<<<< HEAD
 const CustomOrders = ({ navigation, route }) => {
   const [customerName, setCustomerName] = useState("");
   const [orderPlacedDate, setOrderPlacedDate] = useState("");
@@ -32,23 +31,6 @@ const CustomOrders = ({ navigation, route }) => {
       });
 
     // setCustomOrders(apiResponse.data.allCustomOrders);
-=======
-const CustomOrders = ({ navigation }) => {
-  const [name, setName] = useState("");
-  const [orderPlacedDate, setOrderPlacedDate] = useState("");
-  const [category, setCategory] = useState("");
-  const [area, setArea] = useState("");
-  const [price, setPrice] = useState("");
-  const [designImage, setDesignImage] = useState("");
-
-  const customOrderData = {
-    name: name,
-    orderPlacedDate: orderPlacedDate,
-    category: category,
-    area: area,
-    price: price,
-    designImage: designImage,
->>>>>>> afc9b6de9e1a1153cfff03199294611a5c147e25
   };
 
   useEffect(() => {

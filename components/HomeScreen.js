@@ -9,11 +9,6 @@ import axios from "axios";
 import Ip from "../IP_Configuration.js";
 
 const HomeScreen = ({ navigation, route }) => {
-<<<<<<< HEAD
-=======
-  //const { data, _id } = route.params;
-  //const { tailorId } = route.params;
->>>>>>> afc9b6de9e1a1153cfff03199294611a5c147e25
   const [isLoading, setIsLoading] = useState(true);
   const [ordersQuantity, setOrdersQuantity] = useState("20");
   const [customOrdersQty, setCustomOrdersQty] = useState(
@@ -35,23 +30,18 @@ const HomeScreen = ({ navigation, route }) => {
     }, 3000);
   }, []);
 
+  // conflict resolved
+
   const OnStandardOrders = () => {
     navigation.navigate("StandardOrder", {
       loggedInUser: loggedInUser,
     });
   };
   const OnCustomOrders = () => {
-<<<<<<< HEAD
     navigation.navigate("CustomOrders", {
       customOrdersData: loggedInUser.custom_orders,
       loggedInUser: loggedInUser,
     });
-=======
-    //console.log("tailor id", data);
-    console.log("got tailor ");
-    navigation.navigate("CustomOrders", { tailor_id: route.params });
-    console.log("got tailor id ");
->>>>>>> afc9b6de9e1a1153cfff03199294611a5c147e25
   };
 
   const getGreeting = () => {

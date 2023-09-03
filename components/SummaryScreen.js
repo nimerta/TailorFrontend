@@ -64,25 +64,15 @@ const SummaryScreen = ({ navigation, route }) => {
 
         {/* Customer Details */}
         <View style={styles.customerContainer}>
-<<<<<<< HEAD
           <Text>Customer Name: {order.user.full_name}</Text>
           {/* <Text>Address: {order.address.formatted_address}</Text> */}
           <Text>Phone No: {order.user.phone_no}</Text>
-=======
-          <Text>Customer Name: {customerName}</Text>
-          <Text>Address: {address}</Text>
-          <Text>Phone No: {phoneNo}</Text>
->>>>>>> afc9b6de9e1a1153cfff03199294611a5c147e25
         </View>
 
         {/* Order Items */}
         <View style={styles.orderItemsContainer}>
           <Text>Order Items:</Text>
-<<<<<<< HEAD
           {order.items.map((item) => (
-=======
-          {orderItems.map((item) => (
->>>>>>> afc9b6de9e1a1153cfff03199294611a5c147e25
             <View key={item.id} style={styles.orderItemContainer}>
               {/* ... (item image) */}
               <Image
@@ -92,19 +82,13 @@ const SummaryScreen = ({ navigation, route }) => {
                 style={styles.itemImage}
               />
               <View style={styles.itemDetailsContainer}>
-<<<<<<< HEAD
                 <Text style={styles.itemTitle}>{item.item.title}</Text>
                 <Text style={styles.itemPrice}>Rs {item.item.price}</Text>
-=======
-                <Text style={styles.itemTitle}>{item.title}</Text>
-                <Text style={styles.itemPrice}>Rs {item.price.toFixed(2)}</Text>
->>>>>>> afc9b6de9e1a1153cfff03199294611a5c147e25
               </View>
             </View>
           ))}
         </View>
 
-<<<<<<< HEAD
         <Text>
           Date:{" "}
           {`${new Date(order.createdAt).getDate()}-${new Date(
@@ -119,12 +103,6 @@ const SummaryScreen = ({ navigation, route }) => {
           <Text style={styles.totalText}>Total Price:</Text>
           <Text style={styles.totalPrice}>Rs {order.total_amount}</Text>
         </View>
-=======
-        <Text>Date: {date}</Text>
-        <Text>Payment Method: {paymentMethod}</Text>
-
-        {/* ... (total price) */}
->>>>>>> afc9b6de9e1a1153cfff03199294611a5c147e25
 
         {!order.completed && (
           <TouchableOpacity
